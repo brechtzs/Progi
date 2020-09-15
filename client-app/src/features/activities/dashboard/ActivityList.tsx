@@ -1,16 +1,11 @@
 import React, { useContext } from 'react';
 import { Item, Button, Label, Segment } from 'semantic-ui-react';
-import { IActivity } from '../../../app/models/activity';
 import {observer} from 'mobx-react-lite';
 import ActivityStore from '../../../app/stores/activityStore';
 
-interface IProps {
-    deleteActivity: (id: string) => void;
-}
-
-const ActivityList: React.FC<IProps> = ({deleteActivity}) => {
+const ActivityList: React.FC = () => {
     const activityStore = useContext(ActivityStore);
-    const {activitiesByDate, selectActivity} = activityStore;
+    const {activitiesByDate, selectActivity, deleteActivity} = activityStore;
     return (
         <Segment clearing>
             <Item.Group divided>

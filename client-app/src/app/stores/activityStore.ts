@@ -1,6 +1,5 @@
 import { observable, action, computed } from 'mobx';
 import { createContext } from 'react';
-import { act } from 'react-dom/test-utils';
 import agent from '../api/agent';
 import { IActivity } from '../models/activity';
 
@@ -48,6 +47,15 @@ class ActivityStore {
             this.activityRegistry.set(activity.id, activity);
             this.selectedActivity = activity;
             this.editMode = false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action deleteActivity = async (id: string) => {
+        try {
+            await agent.Activities.delete(id);
+            this.activityRegistry.delete(id);
         } catch (error) {
             console.log(error);
         }
