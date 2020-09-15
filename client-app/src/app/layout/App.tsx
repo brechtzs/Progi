@@ -1,12 +1,15 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { Container } from 'semantic-ui-react';
 import { IActivity } from '../models/activity';
 import { NavBar } from '../../features/nav/NavBar';
-import { ActivityDashboard } from '../../features/activities/dashboard/ActivityDashboard';
+import ActivityDashboard  from '../../features/activities/dashboard/ActivityDashboard';
+import ActivityStore from '../stores/activityStore';
 import agent from '../api/agent';
+import {observer} from 'mobx-react-lite';
 
 
 const App = () => {
+  const activityStore = useContext(ActivityStore);
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(null); 
   const [editMode, setEditMode] = useState(false);
@@ -44,23 +47,15 @@ const App = () => {
   }
 
   useEffect(() => {
-    agent.Activities.list()
-    .then(response => {
-      let activities: IActivity[] = [];
-      response.forEach((activity) => {
-        activity.date = activity.date.split('.')[0];
-        activities.push(activity);
-      })
-      setActivities(activities);
-    });
-  }, []);
+    activityStore.loadActivities();
+  }, [activityStore]);
 
   return (
     <Fragment>
       <NavBar openCreateForm={handleOpenCreateForm} />
       <Container style={{marginTop: '7em'}}>
         <ActivityDashboard 
-          activities={activities} 
+          activities={activityStore.activities} 
           selectActivity={handleSelectActivity}
           selectedActivity={selectedActivity!}
           editMode={editMode}
@@ -77,4 +72,4 @@ const App = () => {
   
 }
 
-export default App;
+export default observer(App);

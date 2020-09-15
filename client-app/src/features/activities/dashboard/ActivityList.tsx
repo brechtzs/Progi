@@ -1,6 +1,7 @@
-import React from 'react'
-import { Item, Button, Label, Segment } from 'semantic-ui-react'
-import { IActivity } from '../../../app/models/activity'
+import React from 'react';
+import { Item, Button, Label, Segment } from 'semantic-ui-react';
+import { IActivity } from '../../../app/models/activity';
+import {observer} from 'mobx-react-lite';
 
 interface IProps {
     activities: IActivity[];
@@ -8,7 +9,7 @@ interface IProps {
     deleteActivity: (id: string) => void;
 }
 
-export const ActivityList: React.FC<IProps> = ({activities, selectActivity, deleteActivity}) => {
+const ActivityList: React.FC<IProps> = ({activities, selectActivity, deleteActivity}) => {
     return (
         <Segment clearing>
             <Item.Group divided>
@@ -43,3 +44,5 @@ export const ActivityList: React.FC<IProps> = ({activities, selectActivity, dele
         
     )
 }
+
+export default observer(ActivityList);
