@@ -1,7 +1,9 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, configure, runInAction } from 'mobx';
 import { createContext } from 'react';
 import agent from '../api/agent';
 import { IActivity } from '../models/activity';
+
+configure({enforceActions: 'always'});
 
 class ActivityStore {
     @observable activityRegistry = new Map();
@@ -20,22 +22,28 @@ class ActivityStore {
         this.loadingInitial = true;
         try {
             const activities = await agent.Activities.list();
-            activities.forEach(activity => {
-            activity.date = activity.date.split('.')[0];
-            this.activityRegistry.set(activity.id, activity);
-            });
-            this.loadingInitial = false;
+            runInAction('loading activities', () => {
+                activities.forEach(activity => {
+                    activity.date = activity.date.split('.')[0];
+                    this.activityRegistry.set(activity.id, activity);
+                });
+                this.loadingInitial = false;
+            })
         } catch (error) {
+            runInAction('load activities error', () => {
+                this.loadingInitial = false;
+            })
             console.log(error);
-            this.loadingInitial = false;
         }        
     }
 
     @action createActivity = async (activity: IActivity) => {
         try {
             await agent.Activities.create(activity);
-            this.activityRegistry.set(activity.id, activity);
-            this.editMode = false;
+            runInAction('creating activity', () => {
+                this.activityRegistry.set(activity.id, activity);
+                this.editMode = false;
+            })
         } catch (error) {
             console.log(error);
         }
@@ -44,9 +52,11 @@ class ActivityStore {
     @action editActivity = async (activity: IActivity) => {
         try {
             await agent.Activities.update(activity);
-            this.activityRegistry.set(activity.id, activity);
-            this.selectedActivity = activity;
-            this.editMode = false;
+            runInAction('editing activity', () => {
+                this.activityRegistry.set(activity.id, activity);
+                this.selectedActivity = activity;
+                this.editMode = false;
+            })
         } catch (error) {
             console.log(error);
         }
@@ -55,7 +65,9 @@ class ActivityStore {
     @action deleteActivity = async (id: string) => {
         try {
             await agent.Activities.delete(id);
-            this.activityRegistry.delete(id);
+            runInAction('deleting activities', () => {
+                this.activityRegistry.delete(id);
+            })
         } catch (error) {
             console.log(error);
         }
