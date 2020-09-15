@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx';
 import { createContext } from 'react';
+import { act } from 'react-dom/test-utils';
 import agent from '../api/agent';
 import { IActivity } from '../models/activity';
 
@@ -24,6 +25,21 @@ class ActivityStore {
         }        
     }
 
+    @action createActivity = async (activity: IActivity) => {
+        try {
+            await agent.Activities.create(activity);
+            this.activities.push(activity);
+            this.editMode = false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action openCreateForm = () => {
+        this.editMode = true;
+        this.selectedActivity = undefined;
+    }
+    
     @action selectActivity = (id: string) => {
         this.selectedActivity = this.activities.find(a => a.id === id)
         this.editMode = false;
