@@ -14,14 +14,6 @@ const App = () => {
   const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(null); 
   const [editMode, setEditMode] = useState(false);
   
-  const handleEditActivity = (activity: IActivity) => {
-    agent.Activities.update(activity).then(() => {
-      setActivities([...activities.filter(a => a.id !== activity.id), activity]);
-      setSelectedActivity(activity);
-      setEditMode(false);
-    })
-  }
-
   const handleDeleteActivity = (id: string) => {
     agent.Activities.delete(id).then(() => {
       setActivities([...activities.filter(a => a.id !== id)])
@@ -37,9 +29,6 @@ const App = () => {
       <NavBar />
       <Container style={{marginTop: '7em'}}>
         <ActivityDashboard 
-          setEditMode={setEditMode}
-          setSelectedActivity={setSelectedActivity}
-          editActivity={handleEditActivity}
           deleteActivity={handleDeleteActivity}
         />
       </Container>

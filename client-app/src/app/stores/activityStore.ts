@@ -42,9 +42,33 @@ class ActivityStore {
         }
     }
 
+    @action editActivity = async (activity: IActivity) => {
+        try {
+            await agent.Activities.update(activity);
+            this.activityRegistry.set(activity.id, activity);
+            this.selectedActivity = activity;
+            this.editMode = false;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action openEditForm = (id: string) => {
+        this.selectedActivity = this.activityRegistry.get(id);
+        this.editMode = true;
+    }
+
     @action openCreateForm = () => {
         this.editMode = true;
         this.selectedActivity = undefined;
+    }
+
+    @action cancelSelectedActivity = () => {
+        this.selectedActivity = undefined;
+    }
+
+    @action cancelFormOpen = () => {
+        this.editMode = false;
     }
 
     @action selectActivity = (id: string) => {
