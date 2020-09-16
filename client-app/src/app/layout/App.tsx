@@ -1,8 +1,7 @@
-import React, { useEffect, Fragment, useContext } from 'react';
+import React, { Fragment } from 'react';
 import { Container } from 'semantic-ui-react';
 import NavBar from '../../features/nav/NavBar';
 import ActivityDashboard  from '../../features/activities/dashboard/ActivityDashboard';
-import ActivityStore from '../stores/activityStore';
 import {observer} from 'mobx-react-lite';
 import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import HomePage from '../../features/home/HomePage';
@@ -11,12 +10,6 @@ import ActivityDetails from '../../features/activities/details/ActivityDetails';
 
 
 const App: React.FC<RouteComponentProps> = ({location}) => {
-  const activityStore = useContext(ActivityStore);
-  
-  useEffect(() => {
-    activityStore.loadActivities();
-  }, [activityStore]);
-
   return (
     <Fragment>
       <Route exact path='/' component={HomePage} />
