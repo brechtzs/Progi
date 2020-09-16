@@ -3,9 +3,9 @@ import React, { useContext, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid } from 'semantic-ui-react';
 import ActivityStore from '../../../app/stores/activityStore';
-import { ActivityDetailedChat } from './ActivityDetailedChat';
+import ActivityDetailedChat from './ActivityDetailedChat';
 import ActivityDetailedHeader from './ActivityDetailedHeader';
-import { ActivityDetailedInfo } from './ActivityDetailedInfo';
+import ActivityDetailedInfo from './ActivityDetailedInfo';
 import { ActivityDetailedSidebar } from './ActivityDetailedSidebar';
 
 interface DetailParams {
