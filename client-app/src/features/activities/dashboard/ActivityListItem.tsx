@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react'
+import { Button, Icon, Item, Segment } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity';
 import ActivityStore from '../../../app/stores/activityStore';
 
@@ -19,14 +19,6 @@ export const ActivityListItem: React.FC<{activity: IActivity}> = ({activity}) =>
                             <Item.Description>
                                 Hosted by Bob
                             </Item.Description>
-                            {/*<Item.Extra>
-                                <Button 
-                                    onClick={() => deleteActivity(activity.id)} 
-                                    floated='right' 
-                                    content='Delete' 
-                                    color='blue'/> 
-                                <Label basic content={activity.category} />
-                            </Item.Extra>*/}
                         </Item.Content>
                     </Item>
                 </Item.Group>
