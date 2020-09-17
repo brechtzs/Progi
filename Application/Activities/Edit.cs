@@ -1,9 +1,11 @@
-﻿using Domain;
+﻿using Application.Errors;
+using Domain;
 using FluentValidation;
 using MediatR;
 using Persistence;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +59,7 @@ namespace Application.Activities
 
                 if (activity == null)
                 {
-                    throw new Exception("Could not find activity");
+                    throw new RestException(HttpStatusCode.NotFound, new { activity = "Not found" });
                 }
 
                 activity.Title = request.Title ?? activity.Title;

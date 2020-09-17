@@ -1,7 +1,9 @@
-﻿using Domain;
+﻿using Application.Errors;
+using Domain;
 using MediatR;
 using Persistence;
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +31,7 @@ namespace Application.Activities
 
                 if (activity == null)
                 {
-                    throw new Exception("Could not find activity");
+                    throw new RestException(HttpStatusCode.NotFound, new {activity = "Not found"});
                 }
 
                 _context.Remove(activity);
