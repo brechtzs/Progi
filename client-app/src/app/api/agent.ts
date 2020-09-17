@@ -3,6 +3,10 @@ import { IActivity } from '../models/activity';
 
 axios.defaults.baseURL = 'https://localhost:44317/api';
 
+axios.interceptors.response.use(undefined, error => {
+    console.log(error.response);
+})
+
 const responseBody = (response: AxiosResponse) => response.data;
 
 const requests = {
