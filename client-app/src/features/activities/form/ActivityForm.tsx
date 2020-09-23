@@ -8,6 +8,8 @@ import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form'
 import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
+import SelectInput from '../../../app/common/form/SelectInput';
+import { category } from '../../../app/common/options/CategoryOptions';
 
 interface DetailParams {
     id: string
@@ -76,7 +78,8 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
                                     component={TextAreaInput} 
                                 />
                                 <Field 
-                                    component={TextInput}
+                                    component={SelectInput}
+                                    options={category}
                                     name='category'
                                     placeholder='Category' 
                                     value={activity.category} />
