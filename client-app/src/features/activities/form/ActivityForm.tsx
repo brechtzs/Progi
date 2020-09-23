@@ -1,5 +1,5 @@
 import React, {useState, FormEvent, useContext, useEffect} from 'react';
-import { Segment, Form, Button, Grid } from 'semantic-ui-react';
+import { Segment, Form, Button, Grid, TextArea } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
 import {v4 as uuid} from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore';
@@ -7,6 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Form as FinalForm, Field } from 'react-final-form'
 import TextInput from '../../../app/common/form/TextInput';
+import TextAreaInput from '../../../app/common/form/TextAreaInput';
 
 interface DetailParams {
     id: string
@@ -70,8 +71,9 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
                                 <Field
                                     name='description'
                                     placeholder='Description' 
+                                    rows = {3}
                                     value={activity.description}
-                                    component={TextInput} 
+                                    component={TextAreaInput} 
                                 />
                                 <Field 
                                     component={TextInput}
