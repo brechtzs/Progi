@@ -31,24 +31,20 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
             loadActivity(match.params.id).then((activity) => setActivity(new ActivityFormValues(activity)))
         }
     }, [loadActivity, match.params.id]);
-
-    // const handleSubmit = () => {
-    //     if (activity.id.length === 0) {
-    //         let newActivity = {
-    //             ...activity,
-    //             id: uuid()
-    //         }
-    //         createActivity(newActivity).then(() => history.push(`/activities/${newActivity.id}`));
-    //     } else {
-    //         editActivity(activity).then(() => history.push(`/activities/${activity.id}`));
-    //     }
-    // }
     
     const handleFinalFormSubmit = (values: any) => {
         const dateAndTime = combineDateAndTime(values.date, values.time)
         const {date, time, ...activity} = values;   //omit properties from the object
         activity.date = dateAndTime;
-        console.log(activity);
+        if (!activity.id) {
+            let newActivity = {
+                ...activity,
+                id: uuid()
+            }
+            createActivity(newActivity)
+        } else {
+            editActivity(activity)
+        }
     }
 
     return (
@@ -104,7 +100,11 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
                                     placeholder='Venue' 
                                     value={activity.venue} />
                                 <Button floated='right' positive type='submit' content='Submit' />
-                                <Button onClick={() => history.push('/activities')} floated='right' type='button' content='Cancel' /> 
+                                <Button 
+                                    onClick={ activity.id ? () => history.push(`/activities/${activity.id}`) : () => history.push('/activities')} 
+                                    floated='right' 
+                                    type='button' 
+                                    content='Cancel' /> 
                             </Form>
                         )}
                     />
