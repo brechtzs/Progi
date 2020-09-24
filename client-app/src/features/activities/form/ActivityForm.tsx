@@ -1,6 +1,6 @@
 import React, {useState, FormEvent, useContext, useEffect} from 'react';
 import { Segment, Form, Button, Grid, TextArea } from 'semantic-ui-react';
-import { IActivity, IActivityFormValues } from '../../../app/models/activity';
+import { ActivityFormValues, IActivity, IActivityFormValues } from '../../../app/models/activity';
 import {v4 as uuid} from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore';
 import { RouteComponentProps } from 'react-router-dom';
@@ -24,25 +24,13 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
     
     
 
-    const [activity, setActivity] = useState<IActivityFormValues>({
-        id: undefined,
-        title: '',
-        category: '',
-        description: '',
-        date: undefined,
-        time: undefined,
-        city: '',
-        venue:''
-    });
+    const [activity, setActivity] = useState(new ActivityFormValues());
 
     useEffect(() => {
-        if (match.params.id && activity.id) {
-            loadActivity(match.params.id).then(() => initialFormState && setActivity(initialFormState))
+        if (match.params.id) {
+            loadActivity(match.params.id).then((activity) => setActivity(new ActivityFormValues(activity)))
         }
-        return () => {
-            clearActivity()
-        }
-    }, [loadActivity, clearActivity, match.params.id, initialFormState, activity.id]);
+    }, [loadActivity, match.params.id]);
 
     // const handleSubmit = () => {
     //     if (activity.id.length === 0) {
@@ -68,6 +56,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
             <Grid.Column width={10}>
                 <Segment clearing>
                     <FinalForm 
+                        initialValues={activity}
                         onSubmit={handleFinalFormSubmit}
                         render={({handleSubmit}) => (
                             <Form onSubmit={handleSubmit}>
