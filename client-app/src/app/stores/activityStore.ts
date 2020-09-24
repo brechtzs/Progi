@@ -1,5 +1,7 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
 import { createContext } from 'react';
+import { toast } from 'react-toastify';
+import { history } from '../..';
 import agent from '../api/agent';
 import { IActivity } from '../models/activity';
 
@@ -56,6 +58,7 @@ class ActivityStore {
                 runInAction('getting activity', () => {
                     activity.date = new Date(activity.date)
                     this.activity = activity;
+                    this.activityRegistry.set(activity.id, activity);
                     this.loadingInitial = false;
                 })
                 return activity;
@@ -81,9 +84,11 @@ class ActivityStore {
             await agent.Activities.create(activity);
             runInAction('creating activity', () => {
                 this.activityRegistry.set(activity.id, activity);
-            })
+            });
+            history.push(`/activities/${activity.id}`)
         } catch (error) {
-            console.log(error);
+            toast.error('Problem submitting data')
+            console.log(error.response);
         }
     }
 
@@ -93,9 +98,11 @@ class ActivityStore {
             runInAction('editing activity', () => {
                 this.activityRegistry.set(activity.id, activity);
                 this.activity = activity;
-            })
+            });
+            history.push(`/activities/${activity.id}`)
         } catch (error) {
-            console.log(error);
+            toast.error('Problem submitting data')
+            console.log(error.response);
         }
     }
 
