@@ -1,15 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './app/layout/styles.css';
+import 'react-widgets/dist/css/react-widgets.css';
 import App from './app/layout/App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import ScrollToTop from './app/layout/ScrollToTop';
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import { DateTimePicker } from 'react-widgets'
+
+new dateFnsLocalizer();
 
 ReactDOM.render(
   <BrowserRouter>
     <ScrollToTop>
-      <App />
+      <App>
+        <DateTimePicker />
+      </App> 
+        
     </ScrollToTop>    
   </BrowserRouter>,
   document.getElementById('root')
