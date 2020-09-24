@@ -1,5 +1,6 @@
 import { observable, action, computed, configure, runInAction } from 'mobx';
 import { createContext } from 'react';
+import { toast } from 'react-toastify';
 import { history } from '../..';
 import agent from '../api/agent';
 import { IActivity } from '../models/activity';
@@ -86,7 +87,8 @@ class ActivityStore {
             });
             history.push(`/activities/${activity.id}`)
         } catch (error) {
-            console.log(error);
+            toast.error('Problem submitting data')
+            console.log(error.response);
         }
     }
 
@@ -99,7 +101,8 @@ class ActivityStore {
             });
             history.push(`/activities/${activity.id}`)
         } catch (error) {
-            console.log(error);
+            toast.error('Problem submitting data')
+            console.log(error.response);
         }
     }
 

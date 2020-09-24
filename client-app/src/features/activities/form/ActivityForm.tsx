@@ -1,6 +1,6 @@
-import React, {useState, FormEvent, useContext, useEffect} from 'react';
-import { Segment, Form, Button, Grid, TextArea } from 'semantic-ui-react';
-import { ActivityFormValues, IActivity, IActivityFormValues } from '../../../app/models/activity';
+import React, {useState, useContext, useEffect} from 'react';
+import { Segment, Form, Button, Grid } from 'semantic-ui-react';
+import { ActivityFormValues } from '../../../app/models/activity';
 import {v4 as uuid} from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore';
 import { RouteComponentProps } from 'react-router-dom';
@@ -11,8 +11,21 @@ import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { category } from '../../../app/common/options/CategoryOptions';
 import DateInput from '../../../app/common/form/DateInput';
-import {format} from 'date-fns';
 import { combineDateAndTime } from '../../../app/common/util/util';
+import {combineValidators, composeValidators, hasLengthGreaterThan, isRequired} from 'revalidate'
+
+const validate = combineValidators({ 
+    title: isRequired({message: 'The event title is required'}),
+    category: isRequired('Category'),
+    description: composeValidators(
+        isRequired('Description'),
+        hasLengthGreaterThan(4)({message: 'Description needs to be at least 5 characters'})
+    )(),
+    city: isRequired('City'),
+    venue: isRequired('Venue'),
+    date: isRequired('Date'),
+    time: isRequired('Time')
+})
 
 interface DetailParams {
     id: string
@@ -20,7 +33,7 @@ interface DetailParams {
 
 const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, history}) => {
     const activityStore = useContext(ActivityStore);
-    const{createActivity, editActivity, activity: initialFormState, loadActivity, clearActivity} = activityStore;
+    const{createActivity, editActivity, loadActivity} = activityStore;
     
     
 
@@ -52,9 +65,10 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
             <Grid.Column width={10}>
                 <Segment clearing>
                     <FinalForm 
+                        validate={validate}
                         initialValues={activity}
                         onSubmit={handleFinalFormSubmit}
-                        render={({handleSubmit}) => (
+                        render={({handleSubmit, invalid, pristine}) => (
                             <Form onSubmit={handleSubmit}>
                                 <Field 
                                     name='title'
@@ -99,7 +113,12 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({match, histo
                                     name='venue'
                                     placeholder='Venue' 
                                     value={activity.venue} />
-                                <Button floated='right' positive type='submit' content='Submit' />
+                                <Button 
+                                    disabled={invalid || pristine}
+                                    floated='right' 
+                                    positive 
+                                    type='submit' 
+                                    content='Submit' />
                                 <Button 
                                     onClick={ activity.id ? () => history.push(`/activities/${activity.id}`) : () => history.push('/activities')} 
                                     floated='right' 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { FieldRenderProps } from 'react-final-form'
 import { DateTimePicker } from 'react-widgets'
-import { Form, FormFieldProps, Label, Select } from 'semantic-ui-react'
+import { Form, FormFieldProps, Label } from 'semantic-ui-react'
 
 interface IProps extends FieldRenderProps<Date, HTMLInputElement>, FormFieldProps {}
 
@@ -20,6 +20,8 @@ const DateInput: React.FC<IProps> = ({
                 placeholder={placeholder}
                 value={input.value || null}
                 onChange={input.onChange}
+                onBlur={input.onBlur}
+                onKeyDown={(e) => e.preventDefault()}
                 time={time}
                 date={date}
             />
