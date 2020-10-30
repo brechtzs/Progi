@@ -14,7 +14,7 @@ export const ActivityListItem: React.FC<{activity: IActivity}> = ({activity}) =>
                         <Item.Content>
                             <Item.Header as='a'>{activity.title}</Item.Header>
                             <Item.Description>
-                                Hosted by Bob
+                                Hosted by ...
                             </Item.Description>
                         </Item.Content>
                     </Item>
