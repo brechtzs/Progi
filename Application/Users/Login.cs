@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.User
 {
-    class Login
+    public class Login
     {
         public class Query : IRequest<AppUser>
         {
