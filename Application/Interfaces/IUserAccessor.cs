@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Application.Interfaces
 {
-    interface IUserAccessor
+    public interface IUserAccessor
     {
+        string GetCurrentUsername();
     }
 }
