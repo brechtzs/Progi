@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button, Container, Header, Image, Segment } from 'semantic-ui-react'
 import { RootStoreContext } from '../../app/stores/rootStore'
 import LoginForm from '../user/LoginForm'
+import RegisterForm from '../user/RegisterForm'
 
 const HomePage = () => {
     const rootStore = useContext(RootStoreContext);
@@ -29,7 +30,7 @@ const HomePage = () => {
                         <Button onClick={() => openModal(<LoginForm />)} size='huge' inverted>
                             Login
                         </Button>
-                        <Button as={Link} to='/register' size='huge' inverted>
+                        <Button onClick={() => openModal(<RegisterForm />)} size='huge' inverted>
                             Register
                         </Button>
                     </Fragment>
