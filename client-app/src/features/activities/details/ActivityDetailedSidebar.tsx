@@ -15,7 +15,7 @@ export const ActivityDetailedSidebar = () => {
               >
                 3 People Going
               </Segment>
-              {/*<Segment attached>
+              <Segment attached>
                 <List relaxed divided>
                   <Item style={{ position: 'relative' }}>
                     <Label
@@ -53,7 +53,7 @@ export const ActivityDetailedSidebar = () => {
                     </Item.Content>
                   </Item>
                 </List>
-              </Segment>*/}
+              </Segment>
             </Fragment>
     )
 }
