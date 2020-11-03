@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Segment, Header, Form, Button, Comment } from 'semantic-ui-react'
+import { Segment, Header } from 'semantic-ui-react'
 
 const ActivityDetailedChat = () => {
     return (
@@ -13,7 +13,7 @@ const ActivityDetailedChat = () => {
               >
                 <Header>Chat about this event</Header>
               </Segment>
-              <Segment attached>
+              {/*<Segment attached>
                 <Comment.Group>
                   <Comment>
                     <Comment.Avatar src='/assets/user.png' />
@@ -53,7 +53,7 @@ const ActivityDetailedChat = () => {
                     />
                   </Form>
                 </Comment.Group>
-              </Segment>
+              </Segment>*/}
             </Fragment>
     )
 }
