@@ -34,9 +34,7 @@ namespace Application.Activities
             public async Task<ActivityDTO> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities
-                    .Include(x => x.UserActivities)
-                    .ThenInclude(x => x.AppUser)
-                    .SingleOrDefaultAsync(x => x.Id == request.Id);
+                    .FindAsync(request.Id);
 
                 if (activity == null)
                 {
