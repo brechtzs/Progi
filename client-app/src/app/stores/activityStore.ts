@@ -90,6 +90,12 @@ export default class ActivityStore {
     @action createActivity = async (activity: IActivity) => {
         try {
             await agent.Activities.create(activity);
+            const attendee = createAttendee(this.rootStore.userStore.user!);
+            attendee.isHost = true;
+            let attendees = [];
+            attendees.push(attendee);
+            activity.attendees = attendees;
+            activity.isHost = true;
             runInAction('creating activity', () => {
                 this.activityRegistry.set(activity.id, activity);
             });
