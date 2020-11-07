@@ -17,7 +17,7 @@ export const setActivityProps = (activity: IActivity, user: IUser) => {
     activity.isGoing = activity.attendees.some(
     (a => a.username === user!.username));
     activity.isHost = activity.attendees.some(
-        (a => a.username === user!.username && a.isHost));
+        (a => a.username === user.username && a.isHost));
     return activity;
 }
 

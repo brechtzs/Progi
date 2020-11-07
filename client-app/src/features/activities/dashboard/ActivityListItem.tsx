@@ -5,7 +5,7 @@ import { IActivity } from '../../../app/models/activity';
 import {format} from 'date-fns';
 import ActivityListItemAttendees from './ActivityListItemAttendees';
 
-export const ActivityListItem: React.FC<{activity: IActivity}> = ({activity}) => {
+const ActivityListItem: React.FC<{activity: IActivity}> = ({activity}) => {
     const host = activity.attendees.filter(a => a.isHost)[0];
     return (
         <Segment.Group>
@@ -48,3 +48,5 @@ export const ActivityListItem: React.FC<{activity: IActivity}> = ({activity}) =>
         
     )
 }
+
+export default ActivityListItem
