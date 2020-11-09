@@ -7,6 +7,7 @@ using System;
 using CloudinaryDotNet.Actions;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace Infrastructure.Photos
 {
@@ -31,8 +32,20 @@ namespace Infrastructure.Photos
 
             if (file.Length > 0)
             {
-
+                using (var stream = file.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(file.FileName, stream)
+                    };
+                    uploadResult = _cloudinary.Upload(uploadParams);
+                };
             }
+            return new PhotoUploadResult
+            {
+                PublicId = uploadResult.PublicId,
+                Url = uploadResult.SecureUri.AbsoluteUri
+            };
         }
 
         public string DeletePhoto(string publicId)
