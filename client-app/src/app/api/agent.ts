@@ -66,7 +66,7 @@ const User = {
 
 const Profiles = {
     get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
-    uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.post(`/photos`, photo)
+    uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm(`/photos`, photo)
 }
 
 export default {

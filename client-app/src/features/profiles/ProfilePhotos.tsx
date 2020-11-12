@@ -3,10 +3,11 @@ import { Card, Header, Tab, Image, Button, Grid } from 'semantic-ui-react'
 import { useContext, useState } from 'react'
 import { RootStoreContext } from '../../app/stores/rootStore';
 import PhotoUploadWidget from '../../app/common/photoUpload/PhotoUploadWidget';
+import { observer } from 'mobx-react-lite';
 
 const ProfilePhotos = () => {
     const rootStore = useContext(RootStoreContext);
-    const {profile, isCurrentUser} = rootStore.profileStore;
+    const {profile, isCurrentUser, uploadPhoto, uploadingPhoto} = rootStore.profileStore;
     const [addPhotoMode, setAddPhotoMode] = useState(true);
     
     return (
@@ -24,7 +25,7 @@ const ProfilePhotos = () => {
                 </Grid.Column>
                 <Grid.Column width={16}>
                     {addPhotoMode ? (
-                        <PhotoUploadWidget />
+                        <PhotoUploadWidget uploadPhoto={uploadPhoto} loading={uploadingPhoto} />
                     ): (
                     <Card.Group itemsPerRow={5}>
                     {profile && profile.photos.map((photo) => (
@@ -49,4 +50,4 @@ const ProfilePhotos = () => {
     )
 }
 
-export default ProfilePhotos
+export default observer(ProfilePhotos)
