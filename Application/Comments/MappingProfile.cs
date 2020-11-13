@@ -1,9 +1,6 @@
-﻿using Application.Activities;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Application.Comments
 {
@@ -12,7 +9,9 @@ namespace Application.Comments
         public MappingProfile()
         {
             CreateMap<Comment, CommentDTO>()
-                .ForMember(d => d.Username, o => o.)
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
         }
     }
 }

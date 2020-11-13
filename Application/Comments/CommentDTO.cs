@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Activities
+namespace Application.Comments
 {
     public class CommentDTO
     {
