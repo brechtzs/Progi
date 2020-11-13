@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 
 const ProfilePhotos = () => {
     const rootStore = useContext(RootStoreContext);
-    const {profile, isCurrentUser, uploadPhoto, uploadingPhoto, setMainPhoto} = rootStore.profileStore;
+    const {profile, isCurrentUser, uploadPhoto, uploadingPhoto, setMainPhoto, deletePhoto} = rootStore.profileStore;
     const [addPhotoMode, setAddPhotoMode] = useState(false);
     
     return (
@@ -34,7 +34,13 @@ const ProfilePhotos = () => {
                             {isCurrentUser && 
                                 <Button.Group fluid widths={2} >
                                     <Button onClick={() => setMainPhoto(photo)} basic positive content='Main' />
-                                    <Button basic negative icon='trash' />
+                                    <Button
+                                        name={photo.id}
+                                        disabled={photo.isMain}
+                                        onClick={() => deletePhoto(photo)}
+                                        basic
+                                        negative
+                                        icon='trash' />
                                 </Button.Group>
                             }
                         </Card>
