@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { observable, action, computed, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
 import { history } from '../..';
@@ -20,9 +20,11 @@ export default class ActivityStore {
     @observable loadingInitial = false;
     @observable.ref hubConnection: HubConnection | null = null;
 
-    @action createHubConnection = () => {
+    @action createHubConnection = (activityId: string) => {
         this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:3000/chat', {
+            .withUrl('http://localhost:3000/chat/', {
+                //skipNegotiation: true,
+                //transport: HttpTransportType.WebSockets,
                 accessTokenFactory: () => this.rootStore.commonStore.token!})
             .configureLogging(LogLevel.Information)
             .build();
@@ -30,15 +32,43 @@ export default class ActivityStore {
         this.hubConnection
             .start()
             .then(() => console.log(this.hubConnection!.state))
+            .then(() => {
+                console.log('Attempting to join the group')
+                this.hubConnection!.invoke('AddToGroup', activityId);
+            })
             .catch(error => console.log('Error establishing connection: ', error));
-        
+        console.log("started")
+        console.log(this.hubConnection!.state)
+
         this.hubConnection.on('ReceiveComment', comment => {
-            this.activity!.comments.push(comment);
+            runInAction(() => {
+                this.activity!.comments.push(comment);
+            })
         })
+
+        this.hubConnection.on('Send', message => {
+            toast.info(message);
+        } )
     }
 
     @action stopHubConnection = () => {
-        this.hubConnection!.stop();
+        this.hubConnection!.invoke('RemoveFromGroup', this.activity!.id)
+            .then(() => {
+                this.hubConnection!.stop();
+            })
+            .then(() => console.log('Connection stopped'))
+            .catch(error => console.log(error))
+    }
+
+    @action addComment = async (values: any) => {
+        values.activityId = this.activity!.id;
+        try {
+            console.log(values)
+            console.log(this.hubConnection)
+            await this.hubConnection!.invoke('SendComment', values)
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     @computed get activitiesByDate() {
@@ -116,6 +146,7 @@ export default class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.attendees = attendees;
+            activity.comments = [];
             activity.isHost = true;
             runInAction('creating activity', () => {
                 this.activityRegistry.set(activity.id, activity);
