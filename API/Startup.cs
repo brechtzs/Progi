@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using AutoMapper;
 using Infrastructure.Photos;
+using Application.Profiles;
 
 namespace API
 {
@@ -80,6 +81,8 @@ namespace API
             services.AddScoped<IJWTGenerator, JWTGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IProfileReader, ProfileReader>();
+
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
