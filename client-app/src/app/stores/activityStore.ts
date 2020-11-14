@@ -23,8 +23,8 @@ export default class ActivityStore {
     @action createHubConnection = (activityId: string) => {
         this.hubConnection = new HubConnectionBuilder()
             .withUrl('http://localhost:3000/chat/', {
-                //skipNegotiation: true,
-                //transport: HttpTransportType.WebSockets,
+                skipNegotiation: true,
+                transport: HttpTransportType.WebSockets,
                 accessTokenFactory: () => this.rootStore.commonStore.token!})
             .configureLogging(LogLevel.Information)
             .build();
@@ -37,7 +37,6 @@ export default class ActivityStore {
                 this.hubConnection!.invoke('AddToGroup', activityId);
             })
             .catch(error => console.log('Error establishing connection: ', error));
-        console.log("started")
         console.log(this.hubConnection!.state)
 
         this.hubConnection.on('ReceiveComment', comment => {
