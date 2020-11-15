@@ -6,7 +6,7 @@ import { createAttendee, setActivityProps } from '../common/util/util';
 import { IActivity } from '../models/activity';
 import { RootStore } from './rootStore';
 
-
+const LIMIT = 2;
 
 export default class ActivityStore {
     rootStore: RootStore;
@@ -17,6 +17,16 @@ export default class ActivityStore {
     @observable activityRegistry = new Map();
     @observable activity: IActivity | null = null;
     @observable loadingInitial = false;
+    @observable activityCount = 0;
+    @observable page = 0;
+
+    @computed get totalPages() {
+        return Math.ceil(this.activityCount / LIMIT);
+    }
+
+    @action setPage = (page:number) => {
+        this.page = page;
+    }
 
     @computed get activitiesByDate() {
         return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()))
@@ -36,12 +46,14 @@ export default class ActivityStore {
     @action loadActivities = async() => {
         this.loadingInitial = true;
         try {
-            const activities = await agent.Activities.list();
+            const activitiesEnvelop = await agent.Activities.list(LIMIT, this.page);
+            const {activities, activityCount} = activitiesEnvelop;
             runInAction('loading activities', () => {
                 activities.forEach(activity => {
                     setActivityProps(activity, this.rootStore.userStore.user!)
                     this.activityRegistry.set(activity.id, activity);
                 });
+                this.activityCount = activityCount;
                 this.loadingInitial = false;
             })
         } catch (error) {
