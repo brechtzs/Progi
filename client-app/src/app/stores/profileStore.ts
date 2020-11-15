@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from "mobx";
+import { observable, action, runInAction, computed, reaction } from "mobx";
 import { RootStore } from "./rootStore";
 import { IPhoto, IProfile } from "../models/model";
 import agent from "../api/agent";
@@ -8,12 +8,27 @@ export default class profileStore {
     rootStore: RootStore
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore
+        
+        reaction(
+            () => this.activeTab,
+            activeTab => {
+                if (activeTab === 3 || activeTab === 4) {
+                    const predicate = activeTab === 3 ? 'followers' : 'following';
+                    console.log(predicate)
+                    this.loadFollowings(predicate)
+                } else {
+                    this.followings = [];
+                }
+            }
+        )
     }
 
     @observable profile: IProfile | null = null;
     @observable loadingProfile = true;
     @observable uploadingPhoto = false;
     @observable loading = false;
+    @observable followings: IProfile[] = [];
+    @observable activeTab: number = 0;
 
     @computed get isCurrentUser() {
         if (this.rootStore.userStore.user && this.profile) {
@@ -21,6 +36,10 @@ export default class profileStore {
         } else {
             return false
         }
+    }
+
+    @action setActiveTab = (activeIndex: number) => {
+        this.activeTab = activeIndex;
     }
 
     @action loadProfile = async (username: string) => {
@@ -131,6 +150,22 @@ export default class profileStore {
             })
         } catch(error) {
             toast.error('Problem unfollowing user');
+        }
+    }
+
+    @action loadFollowings = async (predicate: string) => {
+        this.loading = true;
+        try {
+            const profiles = await agent.Profiles.listFollowings(this.profile!.username, predicate);
+            runInAction (() => {
+                this.followings =  profiles;
+                this.loading = false;
+            })
+        } catch(error) {
+            toast.error('Problem loading followings');
+            runInAction(() => {
+                this.loading = false;
+            })
         }
     }
 }
