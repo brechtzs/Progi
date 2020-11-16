@@ -41,7 +41,8 @@ export default class ActivityStore {
         const params = new URLSearchParams();
         params.append('limit', String(LIMIT));
         params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
-        this.predicate.forEach((key, value) => {
+
+        this.predicate.forEach((value, key) => {
             if (key === 'startDate') {
                 params.append(key, value.toISOString());
             } else {
@@ -78,6 +79,7 @@ export default class ActivityStore {
         this.loadingInitial = true;
         try {
             const activitiesEnvelop = await agent.Activities.list(this.axiosParams);
+            console.log(activitiesEnvelop)
             const {activities, activityCount} = activitiesEnvelop;
             runInAction('loading activities', () => {
                 activities.forEach(activity => {
